@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form action="" id="search-drug">
+    <input type="text" placeholder=" Search Drug.." id="search-input">
+    <button >
+        <i class="fa fa-search"></i>     
+    </button>
+</form>
+<table class="table table-striped table-bordered" style="width: 100%">
+    <thead>
+        <tr>
+            <!-- <th>Chart Id</th> -->
+            <th>Drug Name </th>
+            <!-- <th>First Name </th>
+            <th>Home Phone </th> -->
+        </tr>
+    </thead>
+    <tbody id="tbody-medications">
+            <tr>
+                <td>Search medication</td>
+            </tr>
+    </tbody>
+    <tfoot></tfoot>
+</table>
+<script src="/static/medsearch-ui.js"></script>
+{% endblock %} 
