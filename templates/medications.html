@@ -3,17 +3,17 @@
 {% block content %}
     <div class="row">
     <div class="col-3" id="sidebar">
-        {% for patient in patient_data %}
-        <div class="card patient" id="{{patient['id']}}">
+        {% for patient in patients %}
+        <div class="card patient" id="{{patient.id}}">
             <div class="card-body">
                 <div class="media position-relative">
-                    <img src="{{patient['patient_photo']}}" class="mr-3 patient_medication_profile" alt="...">
+                    <img src="{{patient.patient_photo}}" class="mr-3 patient_medication_profile" alt="...">
                     <div class="media-body">
                     <a href="" class="stretched-link">
-                        <h5 class="mt-0">{{patient['first_name']}}{{patient['last_name']}}</h5>
+                        <h5 class="mt-0">{{patient.first_name}} {{patient.last_name}}</h5>
                         </a>
-                        <p>{{patient['date_of_birth']}}
-                            {{patient['id']}}
+                        <p>
+                            {{patient.date_of_birth.year}}-{{patient.date_of_birth.month}}-{{patient.date_of_birth.day}}
                         </p>
                     </div>
                 </div>
@@ -21,24 +21,11 @@
         </div>
             {% endfor %}
         </div>
-    <div class="col-9" id="page">
+        <div class="col-9" id="page">
         <div class="main medication-emr">
-            {% for datas in data %}
-            <div class="card">
-                <h5 class="card-header">Featured</h5>
-                <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">{{datas['name']}}</p>
-                <a href="" class="btn btn-primary">Give</a>
-                </div>
-            </div>
-            {% endfor %}
         </div> 
     </div>
-</div>
-    <script>
-        const access_token = '{{ access_token }}';
-    </script>
+  
     
     <script src="/static/emr/ui.js"></script>
    

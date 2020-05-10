@@ -16,12 +16,12 @@
         </ul>
     </div>
     {% endfor %}
-    <div>
+    <p>
         {% for field in form if field.widget.input_type != 'hidden' %}
         {{field.label}}
         {{field}}
     
-    </div>
+    </p>
     {% endfor %}
         <p><button class="btn btn-primary" >Add!</button></p>
     </form>

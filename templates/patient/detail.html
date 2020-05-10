@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <img id="profile-avatar"src="{{patient.patient_photo}}" alt="">
+  {% for medication in medication_list %}
+    <h1>{{medication.name}}</h1>
+    <p>{{medication.date_prescribed}}</p>
+    <!--doctor who prescribed it?  -->
+    {{medication.doctor}}
+    {% for doctor in medication.doctor %}
+      {{doctor.last_name}}
+    {% endfor %}
+  {% endfor %}
+{% endblock %}

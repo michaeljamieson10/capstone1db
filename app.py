@@ -1,19 +1,17 @@
 from flask import Flask, render_template, request, redirect, jsonify, make_response, session
-from models import db, connect_db, Medication
-from forms import NewMedicationPatientForm
-import requests
+from models import db, connect_db, Medication, Doctor, Patient
+from forms import NewMedicationPatientForm, NewPatientForm
+from datetime import date
 import datetime
+import requests
 import json
 app = Flask(__name__)
+app.config["SECRET_KEY"] = "SSHH SECRETO"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///capstone_one_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 
 connect_db(app)
-
-app.config["SECRET_KEY"] = "SSHH SECRETO"
-
-
 
 def header_create():
     access_token = session['access_token']
@@ -23,6 +21,9 @@ def header_create():
     }
     return headers
 
+def myconverter(o):
+        if isinstance(o, datetime.datetime):
+            return o.__str__()
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -30,6 +31,7 @@ def homepage():
     """Show homepage."""
     
     return render_template("index.html")
+
 @app.route("/login", methods=["GET", "POST"])
 def loginpage():
     """Show homepage."""
@@ -66,23 +68,9 @@ def token():
 @app.route("/doctor")
 def list_doctor():
     """Will list doctors"""
-    url = "https://app.drchrono.com/api/doctors"
-    response = requests.get(url, headers=header_create())
-    response.raise_for_status()
-    data = response.json()
-    raise
+    d = Doctor.query.all()
+    
     return redirect('/')
-
-
-@app.route("/user")
-def user():
-    """Will list current user"""
-    url = "https://drchrono.com/api/users/current"
-    response = requests.get(url, headers=header_create())
-    response.raise_for_status()
-    data = response.json()
-    return redirect('/')
-
 
 # ------------------------
 # Medication routes
@@ -91,61 +79,47 @@ def user():
 @app.route("/medications")
 def list_medications():
     """Will list medications with patients in side bar menu"""
-    # raise
-    url = "https://app.drchrono.com/api/patients"
-    response = requests.get(url, headers=header_create())
-    response.raise_for_status()
-    patient_data = response.json()
-    # raise
-    return render_template("medications.html", patient_data=patient_data['results'], access_token=session['access_token'])
+    patients = Patient.query.all()
+    return render_template("medications.html",patients=patients, access_token=session['access_token'])
 
+@app.route("/medications/get-current-patient/<int:patient_id>")
+def get_patient_medications(patient_id):
+    """Get current patient medications"""
+    p = Patient.query.get(patient_id)
+    ml = Medication.query.filter_by(patients_id=patient_id)
+    ml_one = [m.as_dict() for m in ml]
+    
+    return json.dumps(ml_one, default = myconverter)
+    
 @app.route("/medications-search")
 def search_medications():
     """Will list all medications from the rxnav database"""
     """ajax axios page"""
     
-    return render_template("medication_search.html")
+    return render_template("medication/search.html")
 
 @app.route("/medications-add/<medication_name>", methods=['POST','GET'])
 def add_to_db_list_medications(medication_name):
     """Will create a form  medications with patients in side bar menu"""
     
     form = NewMedicationPatientForm()
-    url = "https://app.drchrono.com/api/patients"
-    
-    response = requests.get(url, headers=header_create())
-    response.raise_for_status()
-    data = response.json()
-    
-    form.patient.choices = [(s['id'], s['first_name'] + " " + s['last_name']) for s in data['results']]
-    
-    url = "https://app.drchrono.com/api/doctors"
-    response = requests.get(url, headers=header_create())
-    response.raise_for_status()
-    data = response.json()
-    form.doctor.choices = [(s['id'], s['first_name'] + " " + s['last_name'])for s in data['results']]
-
-
+    patients = Patient.query.all()
+    pl = [(patient.id ,patient.first_name + " " + patient.last_name +  " " + patient.date_of_birth.strftime('%Y-%m-%d')) for patient in patients]
+    form.patient.choices = pl 
+    d = Doctor.query.all()
+    dl = [(doctor.id, doctor.last_name + " " + doctor.first_name)for doctor in d]
+    form.doctor.choices = dl
     if form.validate_on_submit():
-        # song = Song.query.get(form.song.data)
-        # playlist_song = PlaylistSong(songlist_id=form.song.data,playlist_id=playlist_id)
-        # db.session.add(playlist_song)
-        # db.session.commit()
         patient = form.patient.data
         doctor = form.doctor.data
-        url = "https://app.drchrono.com/api/medications"
-        body = {
-        'doctor': doctor,
-        'patient': patient,
-        'name': medication_name            
-        }
-
-        response = requests.post(url,headers=header_create(), data=json.dumps(body))
-        response.raise_for_status()
-        data = response.json()
+        description = form.description.data
+        m = Medication(name=medication_name,description=description,patients_id=patient,doctors_id=doctor)
+        db.session.add(m)
+        db.session.commit()
+        # raise
         return redirect("/medications")
 
-    return render_template("medication_add.html", form=form)
+    return render_template("medication/create.html", form=form)
 
 # ------------------------
 # Patient routes
@@ -154,38 +128,39 @@ def add_to_db_list_medications(medication_name):
 @app.route("/patients")
 def list_patients():
     """Will list patients"""
-    url = "https://app.drchrono.com/api/patients"
-    
-    response = requests.get(url, headers=header_create())
-    response.raise_for_status()
-    data = response.json()
-    return render_template("patients.html", data=data['results'])
+    patients = Patient.query.all()
+    return render_template("patient/list.html", patients=patients)
+
 
 @app.route("/patients/<patient_id>")
 def list_patient(patient_id):
-    """Will list patients"""
-    url = f"https://app.drchrono.com/api/patients/{patient_id}"
-    
-    response = requests.get(url, headers=header_create())
-    response.raise_for_status()
-    data = response.json()
-    return render_template("users/detail.html", data=data['results'])
+    """Will list patient and his/her medication with other dat such as molst form"""
+    patient = Patient.query.get(patient_id)
+    ml = Medication.query.filter_by(patients_id=patient_id)
+    ml_one = [m.as_dict() for m in ml]
+    medication_list = json.dumps(ml_one, default = myconverter)
+    return render_template('patient/detail.html', patient=patient, medication_list=medication_list)
 
-@app.route("/patient_create")
+@app.route("/patient_create", methods=["GET","POST"])
 def create_pt():
     """Will create patients """
-    url = "https://app.drchrono.com/api/patients"
-    body = {
-        'doctor': 266342,
-        'first_name': 'John',
-        'last_name': 'Jamieson',
-        'date_of_birth': '1997-03-31',
-        'gender': 'Male'
-    }
-
-    response = requests.post(url,headers=header_create(), data=json.dumps(body))
-    response.raise_for_status()
-    data = response.json()
-    return response.json()
+    form = NewPatientForm()
+    if form.validate_on_submit():
+        fn = form.first_name.data
+        ln = form.last_name.data
+        em = form.email.data
+        eth = form.ethnicity.data
+        gen = form.gender.data
+        yr = form.year.data
+        day = form.day.data
+        month = form.month.data
+        date = datetime.date(yr, month, day)
+        p = Patient(first_name=fn,last_name=ln, email=em,ethnicity=eth,gender=gen, date_of_birth=date)
+        db.session.add(p)
+        db.session.commit()
+        raise
+        return redirect("/patients")
+    else:
+        return render_template("patient/create.html", form=form)
 
     

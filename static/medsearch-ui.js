@@ -5,7 +5,7 @@ function generateMedicationHTML(medicationArray) {
         let markUp =  $(`
 
         <div class="card">
-            <h5 class="card-header">LOL</h5>
+            <h5 class="card-header"></h5>
             <div class="card-body">
             <h5 class="card-title">Special title treatment</h5>
             <p class="card-text">${med.name}</p>
