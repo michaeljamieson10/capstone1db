@@ -1,1 +1,5 @@
 Venv/
+__pycache__/
+credentials.json
+token.pkl
+client_secret.json

@@ -1,10 +1,16 @@
 from flask import Flask, render_template, request, redirect, jsonify, make_response, session
-from models import db, connect_db, Medication, Doctor, Patient
+from models import db, connect_db, Medication, Doctor, Patient, Medication_Given, Nurse
 from forms import NewMedicationPatientForm, NewPatientForm
-from datetime import date
+from datetime import date, datetime, timedelta
+from apiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow 
 import datetime
 import requests
 import json
+import pickle
+import hashlib
+import os
+
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "SSHH SECRETO"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///capstone_one_db'
@@ -13,13 +19,6 @@ app.config['SQLALCHEMY_ECHO'] = True
 
 connect_db(app)
 
-def header_create():
-    access_token = session['access_token']
-    headers={
-    'Authorization':'Bearer %s' %access_token,
-    'Content-type':"application/json"
-    }
-    return headers
 
 def myconverter(o):
         if isinstance(o, datetime.datetime):
@@ -29,41 +28,115 @@ def myconverter(o):
 @app.route("/", methods=["GET", "POST"])
 def homepage():
     """Show homepage."""
+    # # url = "https://www.googleapis.com/calendar/v3/users/me/calendarList"
+    # # res = requests.get(url)
+    # scopes = ['https://www.googleapis.com/auth/calendar']
+    # flow = InstalledAppFlow.from_client_secrets_file("client_secret.json", scopes=scopes)
+    # credentials = flow.run_console()
+    # pickle.dump(credentials, open("token.pkl", "wb"))
+    # # raise
+    # credentials = pickle.load(open("token.pkl", 'rb'))
+    # service = build("calendar", "v3", credentials=credentials)
+    # result = service.calendarList().list().execute()
+    # calendar_id = result['items'][1]['id']
+    # result2 = service.events().list(calendarId=)
+    # result2 = service.events().list(calendarId='michaeljamieson10@gmail.com').execute()
+    # start_time = datetime.datetime(2020, 5, 12, 19, 30, 0)
+    # end_time = start_time + timedelta(hours=4)
+    # timezone = "US/Eastern"
+    # Refer to the Python quickstart on how to setup the environment:
+    # https://developers.google.com/calendar/quickstart/python
+    # Change the scope to 'https://www.googleapis.com/auth/calendar' and delete any
+    # stored credentials.
+
+    # event = {
+    # 'summary': 'Do springboard software capstone',
+    # 'location': '2 Toni Place Central Islip',
+    # 'description': 'A chance to hear more about Google\'s developer products.',
+    # 'start': {
+    #     'dateTime': start_time.strftime('%Y-%m-%dT%H:%M:%S'),
+    #     'timeZone': timezone,
+    # },
+    # 'end': {
+    #     'dateTime': end_time.strftime('%Y-%m-%dT%H:%M:%S'),
+    #     'timeZone': timezone,
+    # },
+  
+    # 'reminders': {
+    #     'useDefault': False,
+    #     'overrides': [
+    #     {'method': 'email', 'minutes': 24 * 60},
+    #     {'method': 'popup', 'minutes': 10},
+    #     ],
+    # },
+    # }
+
     
+    # print 'Event created: %s' % (event.get('htmlLink'))
+
+    raise
     return render_template("index.html")
 
-@app.route("/login", methods=["GET", "POST"])
-def loginpage():
+@app.route("/authorize", methods=["GET", "POST"])
+def authorize():
     """Show homepage."""
-    
-    return render_template("login.html")
-
-@app.route("/authorized", methods=["POST"])
-def authorization():
-    """Show homepage."""
-    redirect_uri = 'http://127.0.0.1:5000/token'
-    client_id = 'IvnxhWMo16B9BQBVs89XfvEWYgDrPch5ZGnwCBvK'
-    url = f"https://drchrono.com/o/authorize/?redirect_uri={redirect_uri}&response_type=code&client_id={client_id}"
-    res = requests.get(url)
-    return redirect(url)
+    # url = "https://www.googleapis.com/calendar/v3/users/me/calendarList"
+    # res = requests.get(url)
+    scopes = ['https://www.googleapis.com/auth/calendar']
+    flow = InstalledAppFlow.from_client_secrets_file("client_secret.json", scopes=scopes)
+    credentials = flow.run_console()
+    pickle.dump(credentials, open("token.pkl", "wb"))
+    # raise
+    return render_template("index.html")
 
 @app.route("/token", methods=["GET", "POST"])
-def token():
-    """redirec to token page."""
-
-    response = requests.post('https://drchrono.com/o/token/', data={
+def token_page():
+    """Show homepage."""
+    # Ensure that the request is not a forgery and that the user sending
+    # this connect request is the expected user.
+    if request.args.get('state', '') != session['state']:
+        response = make_response(json.dumps('Invalid state parameter.'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    # url = 'https://oauth2.googleapis.com/token'   
+    
+    response = requests.post('https://oauth2.googleapis.com/token', data={
         'code': request.args.get('code'),
         'grant_type': 'authorization_code',
         'redirect_uri': 'http://127.0.0.1:5000/token',
-        'client_id': 'IvnxhWMo16B9BQBVs89XfvEWYgDrPch5ZGnwCBvK',
-        'client_secret': 'BHHd5xFV1arUnXykMl5CRiSKu8q6GFNCEcgKVyYMZktalOo2VE3dZlG8z94QJoaUT9RuMCf8OWehrKz0Vj4ShrXLmA6GHCBwGUJdqP0dUiJbf9xKhAVwuDEltTz4n3qw',
-    })
+        'client_id': '.apps.googleusercontent.com',
+        'client_secret': '',
+    }) 
     response.raise_for_status()
     data = response.json()
     # Save these in your database associated with the user
     session['access_token'] =  data['access_token']
     session['refresh_token'] =  data['refresh_token']
+    raise
     return redirect("/")
+
+@app.route("/authorized", methods=["GET", "POST"])
+def authorized():
+    """Show login page."""
+    CLIENT_ID = 'apps.googleusercontent.com'
+    
+    state = hashlib.sha256(os.urandom(1024)).hexdigest()
+    session['state'] = state
+    # Set the client ID, token state, and application name in the HTML while
+    # serving it.
+    response = make_response(
+        render_template('index.html',
+                        CLIENT_ID=CLIENT_ID,
+                        STATE=state,
+                        APPLICATION_NAME='Capstone1'))
+
+    uri = 'https://accounts.google.com/o/oauth2/v2/auth?'
+    redirect_uri = 'http://127.0.0.1:5000/token'
+    lala = 'https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id='
+    
+    response_two = requests.get(f"{uri}response_type=code&client_id={CLIENT_ID}&scope=openid%email&redirect_uri={redirect_uri}&state={state}")
+
+    return redirect(f"{uri}response_type=code&client_id={CLIENT_ID}&scope=openid%20profile%20email&redirect_uri={redirect_uri}&state={state}")
 
 @app.route("/doctor")
 def list_doctor():

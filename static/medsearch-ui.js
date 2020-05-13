@@ -23,9 +23,7 @@ $('#search-drug').click(async function(evt){
     evt.preventDefault()
     $searchMedication = $('#search-input').val();
     const medArray = await getMedication($searchMedication); 
-    console.log(medArray.data.drugGroup, "INSIDE UI LOL")
     medSearchHTML = generateMedicationSearchHTML(medArray.data.drugGroup.conceptGroup)   
-    console.log(medSearchHTML,"MEDSEARCHTML")
     $('#tbody-medications').empty()
     $('#tbody-medications').append(medSearchHTML)
 })
@@ -41,7 +39,6 @@ function generateMedicationSearchHTML(medArray) {
           }else{return null}
         })  
     var merged = [].concat.apply([], marks);
-    console.log(merged)
  
     function sortByLength (array) {
         return array.sort((x,y) => x.length - y.length);
@@ -72,3 +69,14 @@ function generateMedicationSearchHTML(medArray) {
     )
    
    }
+new Def.Autocompleter.Prefetch('drug_strengths', []);
+new Def.Autocompleter.Search('rxterms',
+ 'https://clinicaltables.nlm.nih.gov/api/rxterms/v3/search?ef=STRENGTHS_AND_FORMS');
+Def.Autocompleter.Event.observeListSelections('rxterms', function() {
+  var drugField = $('#rxterms')[0];
+  var autocomp = drugField.autocomp;
+  var strengths =
+    autocomp.getSelectedItemData()[0].data['STRENGTHS_AND_FORMS'];
+  if (strengths)
+    $('#drug_strengths')[0].autocomp.setListAndField(strengths, '');
+})

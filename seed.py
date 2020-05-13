@@ -1,5 +1,5 @@
 """SEED FOR CAPSTONE"""
-from models import db, connect_db, Medication, Doctor, Patient
+from models import db, connect_db, Medication, Doctor, Patient, Nurse, Medication_Given
 from app import app
 import datetime
 
@@ -39,4 +39,13 @@ db.session.add(m7)
 db.session.add(m8)
 db.session.add(m9)
 
+n1 = Nurse(first_name="Michael",last_name="Jamieson")
+
+db.session.add(n1)
+
 db.session.commit()
+# mg1 = Medication_Given(nurses_id=1, doctors_id=1, patients_id=1)
+
+# db.session.add(mg1)
+db.session.commit()
+
