@@ -30,6 +30,5 @@ class NewMedicationPatientForm(FlaskForm):
 
     patient = SelectField('Patient To Add to Medication', coerce=int)
     doctor = SelectField('Doctor To Add to Medication', coerce=int)
-    description = StringField('Why Is this patient taking this medication?')
 
 

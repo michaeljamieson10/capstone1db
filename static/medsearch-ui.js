@@ -27,6 +27,17 @@ $('#search-drug').click(async function(evt){
     $('#tbody-medications').empty()
     $('#tbody-medications').append(medSearchHTML)
 })
+$('#search-drug-two').click(async function(evt){
+    // evt.preventDefault()
+    $searchMedication = $('#rxterms').val();
+    console.log($searchMedication);
+    console.log($('#drug_strengths').val())
+    console.log($('#icd10').val())
+    // const medArray = await getMedication($searchMedication); 
+    // medSearchHTML = generateMedicationSearchHTML(medArray.data.drugGroup.conceptGroup)   
+    // $('#tbody-medications').empty()
+    // $('#tbody-medications').append(medSearchHTML)
+})
 function generateMedicationSearchHTML(medArray) {
     console.log(medArray,"inside med arry")
    //     // render medication markup
@@ -80,3 +91,7 @@ Def.Autocompleter.Event.observeListSelections('rxterms', function() {
   if (strengths)
     $('#drug_strengths')[0].autocomp.setListAndField(strengths, '');
 })
+
+new Def.Autocompleter.Search('icd10', 'https://clinicaltables.nlm.nih.gov/api/icd10cm/v3/search?sf=code,name',
+ {tableFormat: true, valueCols: [0,1], colHeaders: ['Code', 'Name']});
+              

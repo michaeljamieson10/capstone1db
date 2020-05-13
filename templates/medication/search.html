@@ -1,34 +1,33 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<form action="" id="search-drug">
+<!-- <form action="" id="search-drug">
     <input type="text" placeholder=" Search Drug.." id="search-input">
     <button >
         <i class="fa fa-search"></i>     
-    </button>
+    </button> -->
 </form>
 <link href='https://clinicaltables.nlm.nih.gov/autocomplete-lhc-versions/17.0.2/autocomplete-lhc.min.css' rel="stylesheet">
 <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
 <script src='https://clinicaltables.nlm.nih.gov/autocomplete-lhc-versions/17.0.2/autocomplete-lhc.min.js'></script>
+<link href='https://clinicaltables.nlm.nih.gov/autocomplete-lhc-versions/17.0.2/autocomplete-lhc.min.css' rel="stylesheet">
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<script src='https://clinicaltables.nlm.nih.gov/autocomplete-lhc-versions/17.0.2/autocomplete-lhc.min.js'></script>
 
-<input type="text" id="rxterms" placeholder="Drug name">
-<input type="text" id="drug_strengths" placeholder="Strength list">
-              
-<table class="table table-striped table-bordered" style="width: 100%">
-    <thead>
-        <tr>
-            <!-- <th>Chart Id</th> -->
-            <th>Drug Name </th>
-            <!-- <th>First Name </th>
-            <th>Home Phone </th> -->
-        </tr>
-    </thead>
-    <tbody id="tbody-medications">
-            <tr>
-                <td>Search medication</td>
-            </tr>
-    </tbody>
-    <tfoot></tfoot>
-</table>
+<h5>Pick a medication to add to the patient and reason for medication</h5>
+<form action="/medications-add" method="GET" id="search-drug-two">
+    <p>
+        <input type="text" id="rxterms" placeholder="Drug name" name="rxterms">
+    </p>
+    <p>
+        <input type="text" id="drug_strengths" placeholder="Strength list" name="drug_strengths">
+    </p>
+    <p>
+        <input type="text" name="diagnosis" id="icd10" placeholder="Code or name" name="diagnosis">
+    </p>
+    <button class="btn btn-primary">Add This Medication To Patient</button>    
+</form>
+
+
 <script src="/static/medsearch-ui.js"></script>
 {% endblock %} 

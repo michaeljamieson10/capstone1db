@@ -32,6 +32,7 @@ class Doctor(db.Model):
     practice_group_name = db.Column(db.Integer, nullable=True)
     profile_picture = db.Column(db.Text, nullable=True, default="")
     medications = db.relationship('Medication', backref='doctor')
+    medications_given = db.relationship('Medication_Given', backref='doctor')
     patients =  db.relationship('Patient', secondary='medications', backref='doctor')
 
 class Patient(db.Model):
@@ -51,6 +52,7 @@ class Patient(db.Model):
     date_of_birth = db.Column(db.DateTime)
     patient_photo = db.Column(db.Text, nullable=True)
     medications = db.relationship('Medication', backref='patient')
+    medications_given = db.relationship('Medication_Given', backref='patient')
 
 class Nurse(db.Model):
     """Nurse """
@@ -74,18 +76,18 @@ class Medication(db.Model):
         nullable=False,
         default=datetime.datetime.now) 
     medications_given = db.relationship('Medication_Given', backref='medications')
-    doctors_id = db.Column(db.Integer, db.ForeignKey('doctors.id'),primary_key=True)
-    patients_id = db.Column(db.Integer, db.ForeignKey('patients.id'),primary_key=True)
+    doctors_id = db.Column(db.Integer, db.ForeignKey('doctors.id'))
+    patients_id = db.Column(db.Integer, db.ForeignKey('patients.id'))
 
 
 class Medication_Given(db.Model):
     """Medication given"""
     __tablename__ = "medication_given"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    nurses_id =  db.Column(db.Integer, db.ForeignKey('nurses.id'),primary_key=True)
-    doctors_id = db.Column(db.Integer, db.ForeignKey('doctors.id'),primary_key=True)
-    patients_id = db.Column(db.Integer, db.ForeignKey('patients.id'),primary_key=True)
-    medications_id = db.Column(db.Integer, db.ForeignKey('medications.id'),primary_key=True) 
+    nurses_id =  db.Column(db.Integer, db.ForeignKey('nurses.id'))
+    doctors_id = db.Column(db.Integer, db.ForeignKey('doctors.id'))
+    patients_id = db.Column(db.Integer, db.ForeignKey('patients.id'))
+    medications_id = db.Column(db.Integer, db.ForeignKey('medications.id')) 
     date_given = db.Column(
         db.DateTime,
         nullable=False,

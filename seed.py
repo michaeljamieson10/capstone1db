@@ -44,8 +44,10 @@ n1 = Nurse(first_name="Michael",last_name="Jamieson")
 db.session.add(n1)
 
 db.session.commit()
-# mg1 = Medication_Given(nurses_id=1, doctors_id=1, patients_id=1)
+mg1 = Medication_Given(nurses_id=1, patients_id=1,doctors_id=1,medications_id=1)
+mg2 = Medication_Given(nurses_id=1, patients_id=2,doctors_id=1,medications_id=2)
 
-# db.session.add(mg1)
+db.session.add(mg1)
+db.session.add(mg2)
 db.session.commit()
 

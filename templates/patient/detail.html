@@ -4,11 +4,10 @@
   <img id="profile-avatar"src="{{patient.patient_photo}}" alt="">
   {% for medication in medication_list %}
     <h1>{{medication.name}}</h1>
-    <p>{{medication.date_prescribed}}</p>
-    <!--doctor who prescribed it?  -->
-    {{medication.doctor}}
-    {% for doctor in medication.doctor %}
-      {{doctor.last_name}}
-    {% endfor %}
+    <p>{{medication.date_prescribed.strftime("%m/%d/%Y, %H:%M:%S")}}</p>
+   
+      <p>
+        Prescribed by {{medication.doctor.last_name}}
+      </p>
   {% endfor %}
 {% endblock %}

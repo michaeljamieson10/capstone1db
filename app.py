@@ -74,7 +74,6 @@ def homepage():
     
     # print 'Event created: %s' % (event.get('htmlLink'))
 
-    raise
     return render_template("index.html")
 
 @app.route("/authorize", methods=["GET", "POST"])
@@ -168,11 +167,11 @@ def get_patient_medications(patient_id):
 def search_medications():
     """Will list all medications from the rxnav database"""
     """ajax axios page"""
-    
+   
     return render_template("medication/search.html")
 
-@app.route("/medications-add/<medication_name>", methods=['POST','GET'])
-def add_to_db_list_medications(medication_name):
+@app.route("/medications-add", methods=['POST','GET'])
+def add_to_db_list_medications():
     """Will create a form  medications with patients in side bar menu"""
     
     form = NewMedicationPatientForm()
@@ -185,8 +184,7 @@ def add_to_db_list_medications(medication_name):
     if form.validate_on_submit():
         patient = form.patient.data
         doctor = form.doctor.data
-        description = form.description.data
-        m = Medication(name=medication_name,description=description,patients_id=patient,doctors_id=doctor)
+        m = Medication(name=request.args['rxterms'],description=request.args['diagnosis'],patients_id=patient,doctors_id=doctor)
         db.session.add(m)
         db.session.commit()
         # raise
@@ -210,8 +208,15 @@ def list_patient(patient_id):
     """Will list patient and his/her medication with other dat such as molst form"""
     patient = Patient.query.get(patient_id)
     ml = Medication.query.filter_by(patients_id=patient_id)
-    ml_one = [m.as_dict() for m in ml]
-    medication_list = json.dumps(ml_one, default = myconverter)
+    medication_list = [m for m in ml]
+    # medication_list = [m.as_dict() for m in ml]
+    # medication_list = json.dumps(ml_one, default = myconverter)
+    # medication_list = (ml_one, default = myconverter)
+    #    player.update({'weightKilograms': '111.1'})
+    # [m.update({'date_prescribed': m['date_prescribed'].strftime("%m/%d/%Y, %H:%M:%S")}) for m in medication_list]
+    # [m['date_prescribed'] = m['date_prescribed'].strftime("%m/%d/%Y, %H:%M:%S") for m in ml_one]
+
+    # raise
     return render_template('patient/detail.html', patient=patient, medication_list=medication_list)
 
 @app.route("/patient_create", methods=["GET","POST"])
