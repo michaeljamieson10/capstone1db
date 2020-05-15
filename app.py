@@ -142,7 +142,7 @@ def list_doctor():
     """Will list doctors"""
     d = Doctor.query.all()
     
-    return redirect('/')
+    return render_template('doctor/list.html',doctors=d)
 
 # ------------------------
 # Medication routes
@@ -162,11 +162,34 @@ def get_patient_medications(patient_id):
     ml_one = [m.as_dict() for m in ml]
     
     return json.dumps(ml_one, default = myconverter)
+
+@app.route("/medications/<int:medication_id>/<int:patient_id>/given",methods=['GET'])
+def medications_given_get(medication_id,patient_id):
+    """Will add medication to given medications from database"""
+    # mg = Medication_Given(nurses_id=1,patients_id=patient_id,medications_id=medication_id,doctors_id=1)
+    
+    mgl = Medication_Given.query.filter_by(medications_id=medication_id,patients_id=patient_id).all()
+    # raise
+    if len(mgl) == 0 :
+        return "Never Given"
+    # return mg.date_given.strftime("%m/%d/%Y, %H:%M:%S")
+    # return json.dumps(ml_one, default = myconverter)
+    return render_template('patient/medication_history.html', mgl=mgl)
+
+@app.route("/medications/<int:medication_id>/<int:patient_id>/given",methods=['POST'])
+def medications_given_create(medication_id,patient_id):
+    """Will add medication to given medications from database"""
+    mg = Medication_Given(nurses_id=1,patients_id=patient_id,medications_id=medication_id,doctors_id=1)
+    db.session.add(mg)
+    db.session.commit()
+    
+    return mg.date_given.strftime("%m/%d/%Y, %H:%M:%S")
+    # return json.dumps(ml_one, default = myconverter)
     
 @app.route("/medications-search")
 def search_medications():
-    """Will list all medications from the rxnav database"""
-    """ajax axios page"""
+    """Will list all medications from api"""
+    
    
     return render_template("medication/search.html")
 
@@ -192,6 +215,15 @@ def add_to_db_list_medications():
 
     return render_template("medication/create.html", form=form)
 
+
+
+# @app.route("/medications/<int:medication_id>/delete")
+# def search_medications():
+#     """Will list all medications from database"""
+    
+   
+#     return render_template("medication/search.html")
+    
 # ------------------------
 # Patient routes
 # ------------------------
@@ -209,12 +241,6 @@ def list_patient(patient_id):
     patient = Patient.query.get(patient_id)
     ml = Medication.query.filter_by(patients_id=patient_id)
     medication_list = [m for m in ml]
-    # medication_list = [m.as_dict() for m in ml]
-    # medication_list = json.dumps(ml_one, default = myconverter)
-    # medication_list = (ml_one, default = myconverter)
-    #    player.update({'weightKilograms': '111.1'})
-    # [m.update({'date_prescribed': m['date_prescribed'].strftime("%m/%d/%Y, %H:%M:%S")}) for m in medication_list]
-    # [m['date_prescribed'] = m['date_prescribed'].strftime("%m/%d/%Y, %H:%M:%S") for m in ml_one]
 
     # raise
     return render_template('patient/detail.html', patient=patient, medication_list=medication_list)
@@ -232,12 +258,12 @@ def create_pt():
         yr = form.year.data
         day = form.day.data
         month = form.month.data
+        photo = form.photo.data
         date = datetime.date(yr, month, day)
-        p = Patient(first_name=fn,last_name=ln, email=em,ethnicity=eth,gender=gen, date_of_birth=date)
+        p = Patient(first_name=fn,last_name=ln, email=em,ethnicity=eth,gender=gen, date_of_birth=date,patient_photo=photo)
         db.session.add(p)
         db.session.commit()
-        raise
-        return redirect("/patients")
+        return redirect("/medications-search")
     else:
         return render_template("patient/create.html", form=form)
 

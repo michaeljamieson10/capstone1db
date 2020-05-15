@@ -1,24 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
+<div class="container-fluid">
 <form method="POST">
-    <!-- {{ form.csrf_token }} -->
+
     {{form.hidden_tag()}}
   
-    <!-- {% for field in form
-           if field.widget.input_type != 'hidden' %}
-  
-      <p>
-        {{ field.label }}
-        {{ field }}
-  
-        {% for error in field.errors %}
-          {{ error }}
-        {% endfor %}
-      </p>
-  
-    {% endfor %} -->
+ 
       <p>
           {{ form.first_name.label }}
           {{ form.first_name }}
@@ -38,6 +26,10 @@
         {{ form.gender }}
       </p>
       <p>
+        {{ form.photo.label }}
+        {{ form.photo }}
+      </p>
+      <p>
         {{ form.month.label }}
         {{ form.month }}
         {{ form.day }}
@@ -48,5 +40,5 @@
   
     <button type="submit">Submit</button>
   </form>
-
+</div>
 {% endblock %}

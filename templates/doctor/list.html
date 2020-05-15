@@ -7,13 +7,12 @@
                 <th>Last Name </th>
                 <th>First Name </th>
                 <th>Office Phone </th>
-                <th>Office Phone </th>
+                <th>Cell Phone </th>
             </tr>
         </thead>
         <tbody>
             {% for doctor in doctors %}
                 <tr>
-                    <td><a href="/patients/{{patient.id}}">{{patient.id}}</a></td>
                     <td>{{doctor.last_name}}</td>
                     <td>{{doctor.first_name}}</td>
                     <td>{{doctor.office_phone}}</td>

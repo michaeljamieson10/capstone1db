@@ -17,19 +17,8 @@ class Doctor(db.Model):
     first_name = db.Column(db.Text, nullable=False)
     last_name = db.Column(db.Text, nullable=False)
     email = db.Column(db.Text, nullable=True)
-    specialty = db.Column(db.Text, nullable=True, default="Podiatrist")
-    job_title = db.Column(db.Text, nullable=True, default="API/Developer")
-    suffix = db.Column(db.Text, nullable=True, default=None)
-    website = db.Column(db.Text, nullable=True, default=None)
-    home_phone = db.Column(db.Text, nullable=True, default=None)
     office_phone = db.Column(db.Text, nullable=True, default=None)
     cell_phone = db.Column(db.Text, nullable=True, default=None)
-    country = db.Column(db.Text, nullable=True, default="USA")
-    timezone = db.Column(db.Text, nullable=True, default="US/Eastern")
-    npi_number = db.Column(db.Text, nullable=True, default="")
-    group_npi_number = db.Column(db.Text, nullable=True, default=None)
-    practice_group = db.Column(db.Integer, nullable=True, default=286675)
-    practice_group_name = db.Column(db.Integer, nullable=True)
     profile_picture = db.Column(db.Text, nullable=True, default="")
     medications = db.relationship('Medication', backref='doctor')
     medications_given = db.relationship('Medication_Given', backref='doctor')
@@ -83,6 +72,8 @@ class Medication(db.Model):
 class Medication_Given(db.Model):
     """Medication given"""
     __tablename__ = "medication_given"
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nurses_id =  db.Column(db.Integer, db.ForeignKey('nurses.id'))
     doctors_id = db.Column(db.Integer, db.ForeignKey('doctors.id'))

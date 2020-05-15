@@ -28,3 +28,6 @@
   height:800px;
   overflow:auto;
 }
+.nav-link {
+  color:pink;
+}
