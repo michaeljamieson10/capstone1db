@@ -144,7 +144,7 @@ def medications_given_create(medication_id,patient_id):
     return mg.date_given.strftime("%m/%d/%Y, %H:%M:%S")
     # return json.dumps(ml_one, default = myconverter)
     
-@app.route("/medications-search")
+@app.route("/medications/search")
 def search_medications():
     """Will list all medications from api"""
     
@@ -219,7 +219,7 @@ def create_pt():
         p = Patient(first_name=fn,last_name=ln, date_of_birth=date, patient_photo=photo)
         db.session.add(p)
         db.session.commit()
-        return redirect("/medications-search")
+        return redirect("/medications/search")
     else:
         return render_template("patient/create.html", form=form)
 

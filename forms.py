@@ -18,9 +18,6 @@ class NewPatientForm(FlaskForm):
     """Create a new patient form."""
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])
-    email = StringField('Email')
-    ethnicity = StringField('Ethnicity')
-    gender = StringField('Gender')
     photo = StringField('Enter Photo Url Here')
     month = SelectField("Date Of Birth", choices=[(1, 'January'), (2,'February'),(3, 'March'),(4,'April'),(5,'May'),(6,'June'),(7,'July'),(8,'August'),(9,'September'),(10,'October'),(11,'November'),(12,'December')], coerce=int) 
     day = SelectField("Day Date Of Birth", choices=day_date_of_birth_list, coerce=int)

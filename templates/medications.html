@@ -2,14 +2,14 @@
 
 {% block content %}
     <div class="row">
-    <div class="col-3" id="sidebar">
+    <div class="col-3" id="sidebar" >
         {% for patient in patients %}
-        <div class="card patient" id="{{patient.id}}">
-            <div class="card-body">
-                <div class="media position-relative">
+        <div class="card patient"  id="{{patient.id}}">
+            <div class="card-body" >
+                <div class="media position-relative" >
                     <img src="{{patient.patient_photo}}" class="mr-3 patient_medication_profile" alt="...">
-                    <div class="media-body">
-                    <a href="" class="stretched-link">
+                    <div class="media-body" >
+                    <a href="" class="stretched-link" >
                         <h5 class="mt-0">{{patient.first_name}} {{patient.last_name}}</h5>
                         </a>
                         <p>
@@ -23,13 +23,13 @@
         </div>
         <div class="col-9" id="page">
         <div class="main medication-emr">
-            
+
         </div> 
 
         
     </div>
   
     
-    <script src="/static/emr/ui.js"></script>
+   
    
 {% endblock %} 

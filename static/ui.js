@@ -4,8 +4,8 @@ $(document).on("click", ".patient", async function(event) {
     $('.medication-emr').empty();
     const med = await getPatientId(patient_id)
     medHTML = generateMedicationHTML(med.data)
- 
-
+    $(this).siblings().css('background', '#ffffff')
+    $(this).css('background', '#ccc'); 
     $('.medication-emr').append(medHTML);
 })
 
@@ -39,4 +39,18 @@ $(document).on("click", ".given", async function(event) {
     medication_id = $(this).attr('data-medId')
     patients_id = $(this).attr('data-ptId')
     await createGivenMedication(patients_id,medication_id)
+});
+$(function() {
+    pathArray = location.pathname.split("/")
+    pathArray.shift()
+    newPath = "";
+    for(x=0; x < pathArray.length; x++){
+        if (x > 0){
+            newPath += "/" + pathArray[x]
+        }else{
+            newPath += pathArray[x]
+        }
+
+    }
+    $('.navbar-nav li a[href^="/' + newPath + '"]').first().addClass('active');
 });
