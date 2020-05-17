@@ -1,3 +1,7 @@
+/**
+ * When clicking patient this retrieves medications from
+ *  database and also changes the background of the patient card to grey
+ */
 $(document).on("click", ".patient", async function(event) {
     event.preventDefault();
     patient_id = $(this).attr('id')
@@ -9,11 +13,13 @@ $(document).on("click", ".patient", async function(event) {
     $('.medication-emr').append(medHTML);
 })
 
-
+/**
+ * Generates medication html for each medication of a specific patient
+ */
 function generateMedicationHTML(medicationArray) {
 
  marks = medicationArray.map(function(med){
-// /medications/<int:medication_id>/<int:patient_id>/given
+
     let markUp =  $(`
 
         <div class="card" >
@@ -33,7 +39,10 @@ function generateMedicationHTML(medicationArray) {
     return marks;
 }
 
-
+/**
+ * This allows clicking given button and adds the 
+ * medication to the given database, with time given by whom and which doctor
+ */
 
 $(document).on("click", ".given", async function(event) {
     event.preventDefault();
@@ -42,6 +51,11 @@ $(document).on("click", ".given", async function(event) {
     await createGivenMedication(patients_id,medication_id)
     $('#ifGiven').text("Given")
 });
+
+/** 
+ * This is to add the active class to the navlink that has the current url
+ */
+
 $(function() {
     pathArray = location.pathname.split("/")
     pathArray.shift()

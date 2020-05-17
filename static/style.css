@@ -10,21 +10,15 @@
   height: 80px;
 }
 #page {
-  /* display: grid; */
   padding:0;
-  /* grid-template-columns: 30vw; */
-  /* width:100%; */
 } 
 
 #sidebar {
   padding:0;
   height: 800px;
-  /* position: fixed; */
   overflow: auto;
-  /* width: 400px; */
 }
 .main {
-  /* grid-column-start: 2; */
   height:800px;
   overflow:auto;
 }

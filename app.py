@@ -31,67 +31,6 @@ def homepage():
 
     return render_template("index.html")
 
-@app.route("/authorize", methods=["GET", "POST"])
-def authorize():
-    """Show homepage."""
-    # url = "https://www.googleapis.com/calendar/v3/users/me/calendarList"
-    # res = requests.get(url)
-    scopes = ['https://www.googleapis.com/auth/calendar']
-    flow = InstalledAppFlow.from_client_secrets_file("client_secret.json", scopes=scopes)
-    credentials = flow.run_console()
-    pickle.dump(credentials, open("token.pkl", "wb"))
-    # raise
-    return render_template("index.html")
-
-@app.route("/token", methods=["GET", "POST"])
-def token_page():
-    """Show homepage."""
-    # Ensure that the request is not a forgery and that the user sending
-    # this connect request is the expected user.
-    if request.args.get('state', '') != session['state']:
-        response = make_response(json.dumps('Invalid state parameter.'), 401)
-        response.headers['Content-Type'] = 'application/json'
-        return response
-    # url = 'https://oauth2.googleapis.com/token'   
-    
-    response = requests.post('https://oauth2.googleapis.com/token', data={
-        'code': request.args.get('code'),
-        'grant_type': 'authorization_code',
-        'redirect_uri': 'http://127.0.0.1:5000/token',
-        'client_id': '.apps.googleusercontent.com',
-        'client_secret': '',
-    }) 
-    response.raise_for_status()
-    data = response.json()
-    # Save these in your database associated with the user
-    session['access_token'] =  data['access_token']
-    session['refresh_token'] =  data['refresh_token']
-    raise
-    return redirect("/")
-
-@app.route("/authorized", methods=["GET", "POST"])
-def authorized():
-    """Show login page."""
-    CLIENT_ID = 'apps.googleusercontent.com'
-    
-    state = hashlib.sha256(os.urandom(1024)).hexdigest()
-    session['state'] = state
-    # Set the client ID, token state, and application name in the HTML while
-    # serving it.
-    response = make_response(
-        render_template('index.html',
-                        CLIENT_ID=CLIENT_ID,
-                        STATE=state,
-                        APPLICATION_NAME='Capstone1'))
-
-    uri = 'https://accounts.google.com/o/oauth2/v2/auth?'
-    redirect_uri = 'http://127.0.0.1:5000/token'
-    lala = 'https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id='
-    
-    response_two = requests.get(f"{uri}response_type=code&client_id={CLIENT_ID}&scope=openid%email&redirect_uri={redirect_uri}&state={state}")
-
-    return redirect(f"{uri}response_type=code&client_id={CLIENT_ID}&scope=openid%20profile%20email&redirect_uri={redirect_uri}&state={state}")
-
 @app.route("/doctor")
 def list_doctor():
     """Will list doctors"""
