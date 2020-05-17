@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<section class="messages">
+    {% for category,msg in get_flashed_messages(with_categories=true) %}
+        <p class="{{category}}">{{ msg }}</p>
+    {% endfor %}
+</section>
     <div class="row">
     <div class="col-3" id="sidebar" >
         {% for patient in patients %}

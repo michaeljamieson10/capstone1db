@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, jsonify, make_response, session
+from flask import Flask, render_template, request, redirect, jsonify, make_response, session, flash
 from models import db, connect_db, Medication, Doctor, Patient, Medication_Given, Nurse
 from forms import NewMedicationPatientForm, NewPatientForm
 from datetime import date, datetime, timedelta
@@ -124,14 +124,13 @@ def get_patient_medications(patient_id):
 @app.route("/medications/<int:medication_id>/patients/<int:patient_id>/given",methods=['GET'])
 def medications_given_get(medication_id,patient_id):
     """Will get given medications from database"""
-    # mg = Medication_Given(nurses_id=1,patients_id=patient_id,medications_id=medication_id,doctors_id=1)
     
     mgl = Medication_Given.query.filter_by(medications_id=medication_id,patients_id=patient_id).all()
     # raise
     if len(mgl) == 0 :
-        return "Never Given"
-    # return mg.date_given.strftime("%m/%d/%Y, %H:%M:%S")
-    # return json.dumps(ml_one, default = myconverter)
+        flash("Medication was never given",'error')
+        return redirect('/medications')
+
     return render_template('patient/medication_history.html', mgl=mgl)
 
 @app.route("/medications/<int:medication_id>/patients/<int:patient_id>/given",methods=['POST'])
