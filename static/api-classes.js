@@ -1,23 +1,16 @@
 async function getPatientId(patient_id) {
   const response = await axios.get(`/medications/get-current-patient/${patient_id}`)
-  console.log(response.data)
+  
   return response
 };
 async function getGivenMedication(patient_id, medication_id){
-  const response = await axios.get(`/medications/${medication_id}/${patient_id}/given`)
+  const response = await axios.get(`/medications/${medication_id}/patients/${patient_id}/given`)
   return response.data
 }
 async function createGivenMedication(patient_id, medication_id){
 
-  const response = await axios.post(`/medications/${medication_id}/${patient_id}/given`)
-  // console.log(response.data)
+  const response = await axios.post(`/medications/${medication_id}/patients/${patient_id}/given`)
   return response.data
-}
-
-async function removeMedication(){
-
-  // const response = await axios.delete(`/medications`)
-
 }
 
 async function getMedication(searchMedication){

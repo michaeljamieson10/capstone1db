@@ -28,51 +28,6 @@ def myconverter(o):
 @app.route("/", methods=["GET", "POST"])
 def homepage():
     """Show homepage."""
-    # # url = "https://www.googleapis.com/calendar/v3/users/me/calendarList"
-    # # res = requests.get(url)
-    # scopes = ['https://www.googleapis.com/auth/calendar']
-    # flow = InstalledAppFlow.from_client_secrets_file("client_secret.json", scopes=scopes)
-    # credentials = flow.run_console()
-    # pickle.dump(credentials, open("token.pkl", "wb"))
-    # # raise
-    # credentials = pickle.load(open("token.pkl", 'rb'))
-    # service = build("calendar", "v3", credentials=credentials)
-    # result = service.calendarList().list().execute()
-    # calendar_id = result['items'][1]['id']
-    # result2 = service.events().list(calendarId=)
-    # result2 = service.events().list(calendarId='michaeljamieson10@gmail.com').execute()
-    # start_time = datetime.datetime(2020, 5, 12, 19, 30, 0)
-    # end_time = start_time + timedelta(hours=4)
-    # timezone = "US/Eastern"
-    # Refer to the Python quickstart on how to setup the environment:
-    # https://developers.google.com/calendar/quickstart/python
-    # Change the scope to 'https://www.googleapis.com/auth/calendar' and delete any
-    # stored credentials.
-
-    # event = {
-    # 'summary': 'Do springboard software capstone',
-    # 'location': '2 Toni Place Central Islip',
-    # 'description': 'A chance to hear more about Google\'s developer products.',
-    # 'start': {
-    #     'dateTime': start_time.strftime('%Y-%m-%dT%H:%M:%S'),
-    #     'timeZone': timezone,
-    # },
-    # 'end': {
-    #     'dateTime': end_time.strftime('%Y-%m-%dT%H:%M:%S'),
-    #     'timeZone': timezone,
-    # },
-  
-    # 'reminders': {
-    #     'useDefault': False,
-    #     'overrides': [
-    #     {'method': 'email', 'minutes': 24 * 60},
-    #     {'method': 'popup', 'minutes': 10},
-    #     ],
-    # },
-    # }
-
-    
-    # print 'Event created: %s' % (event.get('htmlLink'))
 
     return render_template("index.html")
 
@@ -152,20 +107,23 @@ def list_doctor():
 def list_medications():
     """Will list medications with patients in side bar menu"""
     patients = Patient.query.all()
-    return render_template("medications.html",patients=patients, access_token=session['access_token'])
+    return render_template("medications.html",patients=patients)
 
 @app.route("/medications/get-current-patient/<int:patient_id>")
 def get_patient_medications(patient_id):
-    """Get current patient medications"""
+    """Get current patient medications.
+     THIS ROUTE IS SPECIFIC FOR AJAX AXIOS REQUEST getPatientId 
+        LOCATED IN API-classes
+    """
     p = Patient.query.get(patient_id)
     ml = Medication.query.filter_by(patients_id=patient_id)
     ml_one = [m.as_dict() for m in ml]
     
     return json.dumps(ml_one, default = myconverter)
 
-@app.route("/medications/<int:medication_id>/<int:patient_id>/given",methods=['GET'])
+@app.route("/medications/<int:medication_id>/patients/<int:patient_id>/given",methods=['GET'])
 def medications_given_get(medication_id,patient_id):
-    """Will add medication to given medications from database"""
+    """Will get given medications from database"""
     # mg = Medication_Given(nurses_id=1,patients_id=patient_id,medications_id=medication_id,doctors_id=1)
     
     mgl = Medication_Given.query.filter_by(medications_id=medication_id,patients_id=patient_id).all()
@@ -176,7 +134,7 @@ def medications_given_get(medication_id,patient_id):
     # return json.dumps(ml_one, default = myconverter)
     return render_template('patient/medication_history.html', mgl=mgl)
 
-@app.route("/medications/<int:medication_id>/<int:patient_id>/given",methods=['POST'])
+@app.route("/medications/<int:medication_id>/patients/<int:patient_id>/given",methods=['POST'])
 def medications_given_create(medication_id,patient_id):
     """Will add medication to given medications from database"""
     mg = Medication_Given(nurses_id=1,patients_id=patient_id,medications_id=medication_id,doctors_id=1)
@@ -238,29 +196,27 @@ def list_patients():
 @app.route("/patients/<patient_id>")
 def list_patient(patient_id):
     """Will list patient and his/her medication with other dat such as molst form"""
-    patient = Patient.query.get(patient_id)
+    patient = Patient.query.get_or_404(patient_id)
+    
     ml = Medication.query.filter_by(patients_id=patient_id)
     medication_list = [m for m in ml]
 
     # raise
     return render_template('patient/detail.html', patient=patient, medication_list=medication_list)
 
-@app.route("/patient_create", methods=["GET","POST"])
+@app.route("/patients/create", methods=["GET","POST"])
 def create_pt():
     """Will create patients """
     form = NewPatientForm()
     if form.validate_on_submit():
         fn = form.first_name.data
         ln = form.last_name.data
-        em = form.email.data
-        eth = form.ethnicity.data
-        gen = form.gender.data
         yr = form.year.data
         day = form.day.data
         month = form.month.data
         photo = form.photo.data
         date = datetime.date(yr, month, day)
-        p = Patient(first_name=fn,last_name=ln, email=em,ethnicity=eth,gender=gen, date_of_birth=date,patient_photo=photo)
+        p = Patient(first_name=fn,last_name=ln, date_of_birth=date, patient_photo=photo)
         db.session.add(p)
         db.session.commit()
         return redirect("/medications-search")

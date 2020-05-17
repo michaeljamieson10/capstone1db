@@ -1,24 +1,3 @@
-function generateMedicationHTML(medicationArray) {
- console.log(medicationArray,"inside med arry")
-//     // render medication markup
-   marks = medicationArray.map(function(med){
-        let markUp =  $(`
-
-        <div class="card">
-            <h5 class="card-header"></h5>
-            <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">${med.name}</p>
-            <a href="" class="btn btn-primary">Give</a>
-            </div>
-        </div>
-
-    `);
-    return markUp
-    })
-    return marks;
-}
-
 $('#search-drug').click(async function(evt){
     evt.preventDefault()
     $searchMedication = $('#search-input').val();
@@ -30,13 +9,6 @@ $('#search-drug').click(async function(evt){
 $('#search-drug-two').click(async function(evt){
     // evt.preventDefault()
     $searchMedication = $('#rxterms').val();
-    console.log($searchMedication);
-    console.log($('#drug_strengths').val())
-    console.log($('#icd10').val())
-    // const medArray = await getMedication($searchMedication); 
-    // medSearchHTML = generateMedicationSearchHTML(medArray.data.drugGroup.conceptGroup)   
-    // $('#tbody-medications').empty()
-    // $('#tbody-medications').append(medSearchHTML)
 })
 function generateMedicationSearchHTML(medArray) {
     console.log(medArray,"inside med arry")

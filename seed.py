@@ -7,9 +7,15 @@ import datetime
 db.drop_all()
 db.create_all()
 
-d1 = Doctor(first_name="mikey",last_name="jamie")
+d1 = Doctor(first_name="mikey",last_name="jamie",office_phone="555-5555")
+d2 = Doctor(first_name="Jun",last_name="Folkan",office_phone="555-5555")
+d3 = Doctor(first_name="Moke",last_name="NightRyder",office_phone="555-5555")
+d4 = Doctor(first_name="Miguel",last_name="Sabado",office_phone="555-5555")
 
 db.session.add(d1)
+db.session.add(d2)
+db.session.add(d3)
+db.session.add(d4)
 #  datetime.date(yr, month, day)
 p1 = Patient(first_name="koopa",last_name="posha",date_of_birth= datetime.date(1999,1,19),patient_photo="https://www.thelocal.se/userdata/images/article/6d67730d16af04f3f956389d4cc244af808b8381c23b1e3d218ecd792de14fa8.jpg")
 p2 = Patient(first_name="musha",last_name="shqarm",date_of_birth= datetime.date(2001,4,21),patient_photo="https://www.itl.cat/pngfile/big/11-111594_indian-beautiful-girl-images-wallpaper-pictures-download-indian.jpg")
