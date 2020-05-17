@@ -130,7 +130,6 @@ def medications_given_get(medication_id,patient_id):
     if len(mgl) == 0 :
         flash("Medication was never given",'error')
         return redirect('/medications')
-
     return render_template('patient/medication_history.html', mgl=mgl)
 
 @app.route("/medications/<int:medication_id>/patients/<int:patient_id>/given",methods=['POST'])
@@ -139,7 +138,7 @@ def medications_given_create(medication_id,patient_id):
     mg = Medication_Given(nurses_id=1,patients_id=patient_id,medications_id=medication_id,doctors_id=1)
     db.session.add(mg)
     db.session.commit()
-    
+    # flash("Medication was given",'success')
     return mg.date_given.strftime("%m/%d/%Y, %H:%M:%S")
     # return json.dumps(ml_one, default = myconverter)
     

@@ -23,6 +23,7 @@ function generateMedicationHTML(medicationArray) {
             <a href="/medications/${med.id}/patients/${med.patients_id}/given">View History</a>
             <p class="card-text">${med.description}</p>
             <a class="btn btn-primary given" data-medId=${med.id} data-ptId=${med.patients_id}>Give</a>
+            <span id="ifGiven"></span
             </div>
         </div>
 
@@ -39,6 +40,7 @@ $(document).on("click", ".given", async function(event) {
     medication_id = $(this).attr('data-medId')
     patients_id = $(this).attr('data-ptId')
     await createGivenMedication(patients_id,medication_id)
+    $('#ifGiven').text("Given")
 });
 $(function() {
     pathArray = location.pathname.split("/")
