@@ -119,7 +119,7 @@ class ViewTestCase(TestCase):
             d = {'fn': "Jack",'ln':"Joonson",'yr':"1990",'day':"31",'month':"10"}
             resp = c.post("/patients/create", data=d)
             html = resp.get_data(as_text=True)
-            self.assertEqual(resp.status_code, 200)
+            self.assertEqual(resp.status_code, 302)
             
             # self.assertIn('Jack',html)
             # import pdb 
