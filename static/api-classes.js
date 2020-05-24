@@ -13,7 +13,7 @@ async function createGivenMedication(patient_id, medication_id){
   return response.data
 }
 
-async function getMedication(searchMedication){
-  const response = await axios.get(`https://rxnav.nlm.nih.gov/REST/drugs.json?name=${searchMedication}`)
-  return response
+async function sortBy(header){
+  const response = await axios.get(`/patients/sort/${header}`)
+  return response.data
 }

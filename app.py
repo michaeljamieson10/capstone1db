@@ -88,7 +88,7 @@ def search_medications():
    
     return render_template("medication/search.html")
 
-@app.route("/medications-add", methods=['POST','GET'])
+@app.route("/medications/add", methods=['POST','GET'])
 def add_to_db_list_medications():
     """Will create a form  medications with patients in side bar menu"""
     
@@ -105,20 +105,10 @@ def add_to_db_list_medications():
         m = Medication(name=request.args['rxterms'],description=request.args['diagnosis'],patients_id=patient,doctors_id=doctor)
         db.session.add(m)
         db.session.commit()
-        # raise
         return redirect("/medications")
 
     return render_template("medication/create.html", form=form)
 
-
-
-# @app.route("/medications/<int:medication_id>/delete")
-# def search_medications():
-#     """Will list all medications from database"""
-    
-   
-#     return render_template("medication/search.html")
-    
 # ------------------------
 # Patient routes
 # ------------------------
@@ -129,6 +119,16 @@ def list_patients():
     patients = Patient.query.all()
     return render_template("patient/list.html", patients=patients)
 
+# ~~
+# Patient List functionality
+# ~~
+
+@app.route("/patients/sort/<header>")
+def sort_header_patients(header):
+    """Will sort patients by first name then list patients in a json object"""
+    patients = Patient.query.order_by(header)
+    patient_list = [p.as_dict() for p in patients]
+    return jsonify(patient_list)
 
 @app.route("/patients/<patient_id>")
 def list_patient(patient_id):

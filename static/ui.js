@@ -49,7 +49,7 @@ $(document).on("click", ".given", async function(event) {
     medication_id = $(this).attr('data-medId')
     patients_id = $(this).attr('data-ptId')
     await createGivenMedication(patients_id,medication_id)
-    $('#ifGiven').text("Given")
+    // $('#ifGiven').text("Given")
 });
 
 /** 

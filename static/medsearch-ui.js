@@ -1,57 +1,7 @@
-$('#search-drug').click(async function(evt){
-    evt.preventDefault()
-    $searchMedication = $('#search-input').val();
-    const medArray = await getMedication($searchMedication); 
-    medSearchHTML = generateMedicationSearchHTML(medArray.data.drugGroup.conceptGroup)   
-    $('#tbody-medications').empty()
-    $('#tbody-medications').append(medSearchHTML)
-})
-$('#search-drug-two').click(async function(evt){
-    // evt.preventDefault()
-    $searchMedication = $('#rxterms').val();
-})
-function generateMedicationSearchHTML(medArray) {
-    console.log(medArray,"inside med arry")
-   //     // render medication markup
-      marks = medArray.map(function(med){
-          if(med.conceptProperties){
-              return med.conceptProperties.map(function(x){
-                  return x.name
-
-                })
-          }else{return null}
-        })  
-    var merged = [].concat.apply([], marks);
- 
-    function sortByLength (array) {
-        return array.sort((x,y) => x.length - y.length);
-     }
-    merged = merged.map(function(med_names){
-        if(med_names != null){
-            return med_names            
-        }  
-    }) 
-    console.log(merged, "new merger")
-    merged = sortByLength(merged)
-    return merged.map(function(med_names){
-        if(med_names != null){
-            console.log(med_names, "what ur looking for")
-            markUp = $(`
-                <tr>
-                    <td>
-                    <p>${med_names}</p>
-                    <a href="/medications-add/${med_names}" class="btn btn-primary">Add medication to patient</a>
-                    </td>
-                </tr>
-
-            `)
-            return markUp
-        }
-        }
-    
-    )
-   
-   }
+/**
+ * This is directly from the api 
+ *https://clinicaltables.nlm.nih.gov/api
+ */
 new Def.Autocompleter.Prefetch('drug_strengths', []);
 new Def.Autocompleter.Search('rxterms',
  'https://clinicaltables.nlm.nih.gov/api/rxterms/v3/search?ef=STRENGTHS_AND_FORMS');
