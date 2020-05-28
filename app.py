@@ -102,7 +102,7 @@ def add_to_db_list_medications():
     if form.validate_on_submit():
         patient = form.patient.data
         doctor = form.doctor.data
-        m = Medication(name=request.args['rxterms'],description=request.args['diagnosis'],patients_id=patient,doctors_id=doctor)
+        m = Medication(name=request.args.get('rxterms','None'),description=request.args.get('diagnosis','None'),patients_id=patient,doctors_id=doctor)
         db.session.add(m)
         db.session.commit()
         return redirect("/medications")
@@ -138,7 +138,6 @@ def list_patient(patient_id):
     ml = Medication.query.filter_by(patients_id=patient_id)
     medication_list = [m for m in ml]
 
-    # raise
     return render_template('patient/detail.html', patient=patient, medication_list=medication_list)
 
 @app.route("/patients/create", methods=["GET","POST"])

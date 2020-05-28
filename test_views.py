@@ -7,8 +7,9 @@
 
 import os
 import datetime
+import requests
 from unittest import TestCase
-
+from flask import Flask, request
 from models import db, Doctor, Patient, Medication, Nurse, Medication_Given
 
 os.environ['DATABASE_URL'] = "postgresql:///capstone-one-test"
@@ -114,16 +115,13 @@ class ViewTestCase(TestCase):
             self.assertIn('<label for="first_name">First Name</label>',html)
 # WTF FORM ERROR  
     def test_add_patient(self):
-        """Can use add a patient? POST REQUEST"""
-        with self.client as c:
-            d = {'fn': "Jack",'ln':"Joonson",'yr':"1990",'day':"31",'month':"10"}
-            resp = c.post("/patients/create", data=d)
-            html = resp.get_data(as_text=True)
-            self.assertEqual(resp.status_code, 302)
-            
-            # self.assertIn('Jack',html)
-            # import pdb 
-            # pdb.set_trace()
+            """Can use add a patient? POST REQUEST"""
+            with self.client as c:
+                d = {'first_name': "Jack", 'last_name': "Joonson", 'year': "1990", 'day': "31", 'month': "10"}
+                resp = c.post("/patients/create", data=d)
+                html = resp.get_data(as_text=True)
+                self.assertEqual(resp.status_code, 302)
+                self.assertIn('/medications/search',html)
 
 # - - - - - 
 # Medication views
@@ -176,9 +174,10 @@ class ViewTestCase(TestCase):
         with self.client as c:
             resp = c.get('/medications/add')
             self.assertEqual(resp.status_code, 200)
+            # request.args['rxterms'] = "Turmeric"
+            # request.args['diagnosis'] = "Prevent Cold"
+            d = {'patient':1, 'doctor':1}
+            resp = c.post("/medications/add", data=d)
+            html = resp.get_data(as_text=True)
+            self.assertEqual(resp.status_code, 302)
 
-    # def test_medication_add(self):
-    #     """Add medication"""
-    #     with self.client as c:
-    #         resp = c.post('/medications/add')
-    #         self.assertEqual(resp.status_code, 200)
