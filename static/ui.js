@@ -1,3 +1,9 @@
+$(document).ready(function(){
+    $('#startModal').modal('show');
+});
+$(document).on('hidden.bs.modal','#startModal', function () {
+    window.location = "/medications";
+  });
 /**
  * When clicking patient this retrieves medications from
  *  database and also changes the background of the patient card to grey
@@ -9,7 +15,7 @@ $(document).on("click", ".patient", async function(event) {
     const med = await getPatientId(patient_id)
     medHTML = generateMedicationHTML(med.data)
     $(this).siblings().css('background', '#ffffff')
-    $(this).css('background', '#1556d6'); 
+    $(this).css('background', '#1168D9'); 
     $('.medication-emr').append(medHTML);
 })
 
