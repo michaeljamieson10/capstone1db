@@ -29,7 +29,7 @@ function generateMedicationHTML(medicationArray) {
     let markUp =  $(`
 
         <div class="card" >
-            <h3 class="card-header"></h5>
+            <h3 class="card-header p-3"></h5>
             <div class="card-body">
             <h5 class="card-title">${med.name}</h5>
             <a href="/medications/${med.id}/patients/${med.patients_id}/given">View History</a>

@@ -15,10 +15,10 @@
                     <img src="{{patient.patient_photo}}" class="mr-3 patient_medication_profile" alt="...">
                     <div class="media-body" >
                     <a href="" class="stretched-link" >
-                        <h5 class="mt-0">{{patient.first_name}} {{patient.last_name}}</h5>
-                        </a>
+                    </a>
+                    <h5 class="mt-0">{{patient.first_name}} {{patient.last_name}}</h5>
                         <p>
-                            {{patient.date_of_birth.year}}-{{patient.date_of_birth.month}}-{{patient.date_of_birth.day}}
+                            <b>DOB: </b> {{patient.date_of_birth.year}}-{{patient.date_of_birth.month}}-{{patient.date_of_birth.day}}
                         </p>
                     </div>
                 </div>
