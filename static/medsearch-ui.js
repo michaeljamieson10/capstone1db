@@ -20,14 +20,21 @@ new Def.Autocompleter.Search('icd10', 'https://clinicaltables.nlm.nih.gov/api/ic
  $("#medication-add").on("click", function(event){
    if($('#rxterms').val() == ""){
      event.preventDefault()
-     alert('PLEASE INSERT A NAME')
+     $('.medication-search').prepend(`<div id="medication-add-name" class="alert alert-danger m3" role="alert"> Please insert a name of the medication</div>`)
+    //  let given_med = $(`#medication-add-name`)
+    //  setTimeout(function(){
+    //      given_med.fadeOut('slow')
+    //  },1500)
    }
    if($('#drug_strengths').val() == ""){
     event.preventDefault()
-    alert('PLEASE INSERT A Drug strength')
+    // alert('PLEASE INSERT A Drug strength')
+    $('.medication-search').prepend(`<div id="medication-add-name" class="alert alert-danger m3" role="alert"> Please insert a strength of the medication</div>`)
+
   }
    if($('#icd10').val() == ""){
     event.preventDefault()
-    alert('PLEASE INSERT A DIAGNOSIS')
+    // alert('PLEASE INSERT A DIAGNOSIS')
+    $('.medication-search').prepend(`<div id="medication-add-name" class="alert alert-danger m3" role="alert"> Please insert a diagnosis.</div>`)
   }
  })

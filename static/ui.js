@@ -60,7 +60,7 @@ $(document).on("click", ".given", async function(event) {
     let given_med = $(`#given_${medication_id}`)
     setTimeout(function(){
         given_med.fadeOut('slow')
-    },3000)
+    },1500)
 });
 
 /** 
