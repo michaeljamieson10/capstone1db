@@ -13,8 +13,8 @@
 <link href='https://clinicaltables.nlm.nih.gov/autocomplete-lhc-versions/17.0.2/autocomplete-lhc.min.css' rel="stylesheet">
 <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
 <script src='https://clinicaltables.nlm.nih.gov/autocomplete-lhc-versions/17.0.2/autocomplete-lhc.min.js'></script>
-<div class="container-fluid medication-search">
-<h5>Pick a medication to add to the patient and reason for medication</h5>
+<div class="container-fluid medication-search m-4">
+<h5>Pick a medication to add to the patient, strength and enter a diagnosis. Autocomplete will list recommendations </h5>
 <form action="/medications/add" method="GET" id="search-drug-two">
     <p>
         <input type="text" id="rxterms" placeholder="Drug name" name="rxterms">
@@ -23,7 +23,7 @@
         <input type="text" id="drug_strengths" placeholder="Strength list" name="drug_strengths">
     </p>
     <p>
-        <input type="text" name="diagnosis" id="icd10" placeholder="Code or name" name="diagnosis">
+        <input type="text" name="diagnosis" id="icd10" placeholder="Diagnosis(reason)" name="diagnosis">
     </p>
     <button class="btn btn-primary" id="medication-add">Add This Medication To Patient</button>    
 </form>

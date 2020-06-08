@@ -20,21 +20,26 @@ new Def.Autocompleter.Search('icd10', 'https://clinicaltables.nlm.nih.gov/api/ic
  $("#medication-add").on("click", function(event){
    if($('#rxterms').val() == ""){
      event.preventDefault()
-     $('.medication-search').prepend(`<div id="medication-add-name" class="alert alert-danger m3" role="alert"> Please insert a name of the medication</div>`)
-    //  let given_med = $(`#medication-add-name`)
-    //  setTimeout(function(){
-    //      given_med.fadeOut('slow')
-    //  },1500)
+    /**
+     * Will show to html that user needs to enter medication name
+     */
+    //  $('.medication-search').prepend(`<div id="medication-add-name" class="alert alert-danger m3" role="alert"> Please insert a name of the medication</div>`)
+    $('#rxterms').attr("placeholder", "Enter A Medication!")
    }
    if($('#drug_strengths').val() == ""){
     event.preventDefault()
-    // alert('PLEASE INSERT A Drug strength')
-    $('.medication-search').prepend(`<div id="medication-add-name" class="alert alert-danger m3" role="alert"> Please insert a strength of the medication</div>`)
-
+    /**
+     * Will show to html that user needs to enter drug strength
+     */
+    // $('.medication-search').prepend(`<div id="medication-add-name" class="alert alert-danger m3" role="alert"> Please insert a strength of the medication</div>`)
+    $('#drug_strengths').attr("placeholder", "Enter A Strength!")
   }
    if($('#icd10').val() == ""){
     event.preventDefault()
-    // alert('PLEASE INSERT A DIAGNOSIS')
-    $('.medication-search').prepend(`<div id="medication-add-name" class="alert alert-danger m3" role="alert"> Please insert a diagnosis.</div>`)
+    /**
+     * Will show to html that user needs to enter diagnosis
+     */
+    // $('.medication-search').prepend(`<div id="medication-add-name" class="alert alert-danger m3" role="alert"> Please insert a diagnosis.</div>`)
+    $('#icd10').attr("placeholder", "Enter A Diagnosis!")
   }
  })
