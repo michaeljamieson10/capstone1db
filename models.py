@@ -31,7 +31,7 @@ class Patient(db.Model):
     first_name = db.Column(db.Text, nullable=False)
     last_name = db.Column(db.Text, nullable=False)
     date_of_birth = db.Column(db.DateTime)
-    patient_photo = db.Column(db.Text, nullable=True, default="/images/silhouette.jpeg")
+    patient_photo = db.Column(db.Text, nullable=True, default="static/images/silhouette.jpeg")
     medications = db.relationship('Medication', backref='patient')
     medications_given = db.relationship('Medication_Given', backref='patient')
 
