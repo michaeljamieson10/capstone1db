@@ -21,11 +21,11 @@ table {
 
 #sidebar {
   padding:0;
-  height: 800px;
+  height: 100vh;
   overflow: auto;
 }
 .main {
-  height:800px;
+  height:100vh;
   overflow:auto;
 }
 .nav-link {
