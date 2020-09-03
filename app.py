@@ -32,7 +32,7 @@ def myconverter(o):
 def homepage():
     """Show homepage."""
 
-    return render_template("index.html")
+    return redirect("/medications")
 
 @app.route("/doctor")
 def list_doctor():
@@ -40,6 +40,18 @@ def list_doctor():
     d = Doctor.query.all()
     
     return render_template('doctor/list.html',doctors=d)
+
+@app.route("/doctors/sort/<header>")
+def sort_header_doctors(header):
+    """Will sort patients by first name then list patients in a json object"""
+    doctors = Doctor.query.order_by(header)
+    doctor_list = [d.as_dict() for d in doctors]
+    return jsonify(doctor_list)
+@app.route("/about")
+def about():
+    """Will tell what this product is about"""
+    
+    return render_template('about.html')
 
 # ------------------------
 # Medication routes

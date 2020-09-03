@@ -113,7 +113,7 @@ class ViewTestCase(TestCase):
             resp = c.get("/patients/create")
             html = resp.get_data(as_text=True)
             self.assertIn('<label for="first_name">First Name</label>',html)
-# WTF FORM ERROR  
+
     def test_add_patient(self):
             """Can use add a patient? POST REQUEST"""
             with self.client as c:

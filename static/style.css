@@ -43,3 +43,7 @@ table {
 .messages .error {
   background-color:  rgba(255, 0, 0, 0.1);
 }
+
+th {
+  background-color: #6EA9FF;;
+}

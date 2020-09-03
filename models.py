@@ -13,6 +13,8 @@ def connect_db(app):
 class Doctor(db.Model):
     """Doctor"""
     __tablename__ = "doctors"
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     first_name = db.Column(db.Text, nullable=False)
     last_name = db.Column(db.Text, nullable=False)

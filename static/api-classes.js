@@ -17,3 +17,8 @@ async function sortBy(header){
   const response = await axios.get(`/patients/sort/${header}`)
   return response.data
 }
+
+async function sortByDoctors(header){
+  const response = await axios.get(`/doctors/sort/${header}`)
+  return response.data
+}

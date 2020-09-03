@@ -1,9 +1,4 @@
-$(document).ready(function(){
-    $('#startModal').modal('show');
-});
-$(document).on('hidden.bs.modal','#startModal', function () {
-    window.location = "/medications";
-  });
+
 /**
  * When clicking patient this retrieves medications from
  *  database and also changes the background of the patient card to grey
